@@ -72,8 +72,12 @@ class Scraper:
 
     #changes a parameter in the payload to be delivered to the site
     def changeParam(self,category,choice):
-        selectElement = soup.find('select',{'name':param})
-        print(selectElement)
+        selectElement = self.pageSoup.find_all('select',{'name':category})[0]
+        options = selectElement.find_all('option')
+        for option in options:
+            if choice in option.text:
+                self.params[category] = option['value']
+        #print(selectElement)
         
 #Gets input from user for which division should be searched
 def getDivName():
@@ -120,4 +124,8 @@ def getSportName(gender):
     
 if __name__ == '__main__':
     scraper = Scraper('M','3A','Track & Field')
-    print(scraper.params)
+    track.changeTeam(scraper,'ACGC')
+    track.changeEvent(scraper,'100 Meter Dash')
+    #print(scraper.params)
+    r = requests.post(scraper.url,data=scraper.params)
+    print(r)
