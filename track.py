@@ -3,7 +3,7 @@
 #PURPOSE: 
 #AUTHOR: Jeremy Ferguson
 #DATE CREATED: 5/22/18
-#DATE LAST EDITED: 5/22/18
+#DATE LAST EDITED: 5/23/18
 ################################################################################
 
 from bs4 import BeautifulSoup
@@ -82,6 +82,7 @@ def scrapeEventResults(soup,event):
         athletecol = -1
         teamcol = -1
         markcol = -1
+        #This goes through and finds which columns hold the data for athletes' names, teams, and results
         for i in range(len(titlecols)):
             col = titlecols[i]
             #print(col.text)
@@ -91,18 +92,20 @@ def scrapeEventResults(soup,event):
                 teamcol = i
             if 'Mark' in col.text:
                 markcol = i
+        #This goes through each row in the table, finds the relevant data, and adds it to the output list
         for row in rows[1:]:
             cols = row.find_all('td',recursive=False)
             output.append({
                 'Athlete':cols[athletecol].text.strip(),
                 'Team':cols[teamcol].text.strip(),
-                'Mark':float(cols[markcol].text.strip().replace("H",""))
+                'Mark':cols[markcol].text.strip().replace("H","")
             })
             #print(output[len(output)-1])
         return(output)
     elif 'Relay' in event:
         teamcol = -1
         markcol = -1
+        #This goes through and finds which columns hold the data for team names and results
         for i in range(len(titlecols)):
             col = titlecols[i]
             if 'Team' in col.text:
@@ -126,8 +129,10 @@ def scrapeEventResults(soup,event):
         tables = resultsTable.find_all('table')
         for table in tables:
             body = {}
+            #This finds the header for each event table in the page
             header = table.parent.parent.find('div',{'style':'width: 100%; background-color: #dddddd;'}).text.strip()
             rows = table.find_all('tr')
+            #Now it goes through each row in each table and puts the data into a dictionary
             for row in rows:
                 cols = row.find_all('td')
                 if not cols[0].text.strip().replace('\n','') == '':
@@ -135,6 +140,8 @@ def scrapeEventResults(soup,event):
             output[header] = body
         return(output)
     #print('fin')
+
+
 if __name__ == '__main__':
     scraper = quikstats.Scraper('M','3A','Track & Field')
     changeTeam(scraper,'ACGC')

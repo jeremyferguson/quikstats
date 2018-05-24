@@ -3,7 +3,7 @@
 #PURPOSE: enable primary communication with quikstats site and interact with other specific modules for other sports
 #AUTHOR: Jeremy Ferguson
 #DATE CREATED: 5/22/18
-#DATE LAST EDITED: 5/22/18
+#DATE LAST EDITED: 5/23/18
 ################################################################################
 
 from bs4 import BeautifulSoup
@@ -131,11 +131,12 @@ def getSportName(gender):
         return(None)
     
 if __name__ == '__main__':
-    scraper = Scraper('M','3A','Track & Field')
-    track.changeTeam(scraper,'ACGC')
-    track.changeEvent(scraper,'4x800 Meter Relay')
+    scraper = Scraper('F','3A','Track & Field')
+    #track.changeTeam(scraper,'ACGC')
+    track.changeEvent(scraper,'1500 Meter Run')
     track.changeDiv(scraper,scraper.div)
     #print(scraper.params)
     scraper.scrapeSite()
-    track.scrapeEventResults(scraper.pageSoup,scraper.event)
+    output = track.scrapeEventResults(scraper.pageSoup,scraper.event)
+    print(output)
     #print(scraper.pageSoup)
