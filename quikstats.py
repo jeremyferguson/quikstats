@@ -137,5 +137,5 @@ if __name__ == '__main__':
     track.changeDiv(scraper,scraper.div)
     #print(scraper.params)
     scraper.scrapeSite()
-    track.scrapeEventResults(scraper.pageSoup,'4x800 Meter Relay')
+    track.scrapeEventResults(scraper.pageSoup,scraper.event)
     #print(scraper.pageSoup)

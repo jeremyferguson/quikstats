@@ -36,7 +36,7 @@ def changeTeam(scraper,selection):
     scraper.params['ctl00$ContentPlaceHolder1$ui_GroupSets_Repeater$ctl01$ui_Group_DropDownList'] = ''
     scraper.params['ctl00$ContentPlaceHolder1$ui_GroupSets_Repeater$ctl02$ui_Group_DropDownList'] = ''
     scraper.params['ctl00$ContentPlaceHolder1$ui_GroupSets_Repeater$ctl00$ui_Group_DropDownList'] = ''
-
+    scraper.team = selection
 #Changes the event selection in the parameters
 def changeEvent(scraper,selection):
     scraper.changeParam('ctl00$ContentPlaceHolder1$ui_TrackEvent_DropDownList',selection)
@@ -78,7 +78,7 @@ def scrapeEventResults(soup,event):
     titlecols = titlerow.find_all('td')
     output = []
     #Relays have a different format, so need to be scraped differently
-    if not 'Relay' in event:
+    if not 'Relay' in event and not event == 'Top 5 All Events':
         athletecol = -1
         teamcol = -1
         markcol = -1
@@ -100,7 +100,7 @@ def scrapeEventResults(soup,event):
             })
             #print(output[len(output)-1])
         return(output)
-    else:
+    elif 'Relay' in event:
         teamcol = -1
         markcol = -1
         for i in range(len(titlecols)):
@@ -114,11 +114,34 @@ def scrapeEventResults(soup,event):
             firstrow = newrows[i*2]
             firstcols = firstrow.find_all('td')
             secondrow = newrows[i*2+1]
-            secondcols = secondrow.find_all('td')
+            secondcols = secondrow.find('table').find_all('td')
             output.append({
                 'Team':firstcols[teamcol].text.strip(),
                 'Mark':firstcols[markcol].text.strip(),
-                'Members':[i.text.strip() for i in secondcols[1:]]
+                'Members':[i.text.strip().replace('\n','') for i in secondcols]
             })
-            print(output[len(output)-1])
+        return(output)
+    else:
+        output = {}
+        tables = resultsTable.find_all('table')
+        for table in tables:
+            body = {}
+            header = table.parent.parent.find('div',{'style':'width: 100%; background-color: #dddddd;'}).text.strip()
+            rows = table.find_all('tr')
+            for row in rows:
+                cols = row.find_all('td')
+                if not cols[0].text.strip().replace('\n','') == '':
+                    body[cols[0].text.strip().replace('\n','')] = cols[1].text.strip().replace('\n','')
+            output[header] = body
+        return(output)
     #print('fin')
+if __name__ == '__main__':
+    scraper = quikstats.Scraper('M','3A','Track & Field')
+    changeTeam(scraper,'ACGC')
+    changeEvent(scraper,'Top 5 All Events')
+    changeDiv(scraper,scraper.div)
+    #print(scraper.params)
+    scraper.scrapeSite()
+    output = scrapeEventResults(scraper.pageSoup,scraper.event)
+    print(output)
+    #print(scraper.pageSoup)
