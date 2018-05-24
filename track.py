@@ -32,18 +32,14 @@ def getParams():
 #Changes the team selection in the parameters    
 def changeTeam(scraper,selection):
     scraper.changeParam('ctl00$ContentPlaceHolder1$ui_Team_DropDownList',selection)
-<<<<<<< HEAD
     #Resets the conference, state qualifying site, and division parameters
     scraper.params['ctl00$ContentPlaceHolder1$ui_GroupSets_Repeater$ctl01$ui_Group_DropDownList'] = ''
     scraper.params['ctl00$ContentPlaceHolder1$ui_GroupSets_Repeater$ctl02$ui_Group_DropDownList'] = ''
     scraper.params['ctl00$ContentPlaceHolder1$ui_GroupSets_Repeater$ctl00$ui_Group_DropDownList'] = ''
-=======
->>>>>>> c9245cc0843265ac5b1cdf9d4b332045d47d7595
 
 #Changes the event selection in the parameters
 def changeEvent(scraper,selection):
     scraper.changeParam('ctl00$ContentPlaceHolder1$ui_TrackEvent_DropDownList',selection)
-<<<<<<< HEAD
     scraper.event=selection
     
 #Changes the division selection in the parameters
@@ -82,7 +78,7 @@ def scrapeEventResults(soup,event):
     titlecols = titlerow.find_all('td')
     output = []
     #Relays have a different format, so need to be scraped differently
-    if not 'Relay' in event and not event == 'Top 5 All Events':
+    if not 'Relay' in event:
         athletecol = -1
         teamcol = -1
         markcol = -1
@@ -100,11 +96,11 @@ def scrapeEventResults(soup,event):
             output.append({
                 'Athlete':cols[athletecol].text.strip(),
                 'Team':cols[teamcol].text.strip(),
-                'Mark':cols[markcol].text.strip().replace("H","")
+                'Mark':float(cols[markcol].text.strip().replace("H",""))
             })
             #print(output[len(output)-1])
         return(output)
-    elif 'Relay' in event:
+    else:
         teamcol = -1
         markcol = -1
         for i in range(len(titlecols)):
@@ -118,52 +114,11 @@ def scrapeEventResults(soup,event):
             firstrow = newrows[i*2]
             firstcols = firstrow.find_all('td')
             secondrow = newrows[i*2+1]
-            secondcols = secondrow.find_all('td')[1].find_all('td')
+            secondcols = secondrow.find_all('td')
             output.append({
                 'Team':firstcols[teamcol].text.strip(),
                 'Mark':firstcols[markcol].text.strip(),
-                'Members':[i.text.replace('\n','') for i in secondcols]
+                'Members':[i.text.strip() for i in secondcols[1:]]
             })
-            #print(output[len(output)-1])
-        return(output)
-    else:
-        output = {}
-        tables = resultsTable.find_all('table')
-        containers = []
-        headers = []
-        #print(len(tables))
-        for i in range(len(tables)):
-            table = tables[i]
-            con = table.parent.parent
-            header = con.find_all('div',{'style':'width: 100\x25; background-color: #dddddd;'})[0].text.strip()
-            body = {}
-            for row in table.find_all('tr'):
-                cols = row.find_all('td')
-                if not cols[0].text.replace('\n','') == '':
-                    body[cols[0].text.strip()] = cols[1].text.strip()
-            output[header] = body
-        return(output)
-    
-if __name__ == '__main__':
-    scraper = quikstats.Scraper('M','3A','Track & Field')
-    changeTeam(scraper,'ACGC')
-    changeEvent(scraper,'Top 5 All Events')
-    changeDiv(scraper,scraper.div)
-    #print(scraper.params)
-    scraper.scrapeSite()
-    output = scrapeEventResults(scraper.pageSoup,scraper.event)
-    #print(scraper.pageSoup)
-=======
-
-#Changes the division selection in the parameters
-def changeDiv(scraper,selection):
-    scraper.changeParam('ctl00$ContentPlaceHolder1$ui_GroupSets_Repeater$ctl00$ui_Group_DropDownList',selection)
-
-#Changes the conference selection in the parameters
-def changeConference(scraper,selection):
-    scraper.changeParam('ctl00$ContentPlaceHolder1$ui_GroupSets_Repeater$ctl01$ui_Group_DropDownList',selection)
-
-#Changes the state qualifying site in the parameters
-def changeStateSite(scraper,selection):
-    scraper.changeParam('ctl00$ContentPlaceHolder1$ui_GroupSets_Repeater$ctl02$ui_Group_DropDownList',selection)
->>>>>>> c9245cc0843265ac5b1cdf9d4b332045d47d7595
+            print(output[len(output)-1])
+    #print('fin')

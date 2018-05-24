@@ -74,7 +74,6 @@ class Scraper:
     def changeParam(self,category,choice):
         selectElement = self.pageSoup.find_all('select',{'name':category})[0]
         options = selectElement.find_all('option')
-<<<<<<< HEAD
         found = False
         for option in options:
             if choice in option.text:
@@ -87,12 +86,6 @@ class Scraper:
     def scrapeSite(self):
         r = requests.post(self.url,data=self.params)
         self.pageSoup = BeautifulSoup(r.content,'html.parser')
-=======
-        for option in options:
-            if choice in option.text:
-                self.params[category] = option['value']
-        #print(selectElement)
->>>>>>> c9245cc0843265ac5b1cdf9d4b332045d47d7595
         
 #Gets input from user for which division should be searched
 def getDivName():
@@ -140,16 +133,9 @@ def getSportName(gender):
 if __name__ == '__main__':
     scraper = Scraper('M','3A','Track & Field')
     track.changeTeam(scraper,'ACGC')
-<<<<<<< HEAD
-    track.changeEvent(scraper,'Top 5 All Events')
+    track.changeEvent(scraper,'4x800 Meter Relay')
     track.changeDiv(scraper,scraper.div)
     #print(scraper.params)
     scraper.scrapeSite()
-    track.scrapeEventResults(scraper.pageSoup,scraper.event)
+    track.scrapeEventResults(scraper.pageSoup,'4x800 Meter Relay')
     #print(scraper.pageSoup)
-=======
-    track.changeEvent(scraper,'100 Meter Dash')
-    #print(scraper.params)
-    r = requests.post(scraper.url,data=scraper.params)
-    print(r)
->>>>>>> c9245cc0843265ac5b1cdf9d4b332045d47d7595
