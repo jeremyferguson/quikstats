@@ -1,0 +1,2 @@
+This is a project that allows different methods of scraping the ihsaa page which keeps track of statistics for high school athletics.  
+Currently this is in the process of being implemented only for Track & Field, but later other sports will hopefully be added.

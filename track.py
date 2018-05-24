@@ -32,14 +32,18 @@ def getParams():
 #Changes the team selection in the parameters    
 def changeTeam(scraper,selection):
     scraper.changeParam('ctl00$ContentPlaceHolder1$ui_Team_DropDownList',selection)
+<<<<<<< HEAD
     #Resets the conference, state qualifying site, and division parameters
     scraper.params['ctl00$ContentPlaceHolder1$ui_GroupSets_Repeater$ctl01$ui_Group_DropDownList'] = ''
     scraper.params['ctl00$ContentPlaceHolder1$ui_GroupSets_Repeater$ctl02$ui_Group_DropDownList'] = ''
     scraper.params['ctl00$ContentPlaceHolder1$ui_GroupSets_Repeater$ctl00$ui_Group_DropDownList'] = ''
+=======
+>>>>>>> c9245cc0843265ac5b1cdf9d4b332045d47d7595
 
 #Changes the event selection in the parameters
 def changeEvent(scraper,selection):
     scraper.changeParam('ctl00$ContentPlaceHolder1$ui_TrackEvent_DropDownList',selection)
+<<<<<<< HEAD
     scraper.event=selection
     
 #Changes the division selection in the parameters
@@ -149,3 +153,17 @@ if __name__ == '__main__':
     scraper.scrapeSite()
     output = scrapeEventResults(scraper.pageSoup,scraper.event)
     #print(scraper.pageSoup)
+=======
+
+#Changes the division selection in the parameters
+def changeDiv(scraper,selection):
+    scraper.changeParam('ctl00$ContentPlaceHolder1$ui_GroupSets_Repeater$ctl00$ui_Group_DropDownList',selection)
+
+#Changes the conference selection in the parameters
+def changeConference(scraper,selection):
+    scraper.changeParam('ctl00$ContentPlaceHolder1$ui_GroupSets_Repeater$ctl01$ui_Group_DropDownList',selection)
+
+#Changes the state qualifying site in the parameters
+def changeStateSite(scraper,selection):
+    scraper.changeParam('ctl00$ContentPlaceHolder1$ui_GroupSets_Repeater$ctl02$ui_Group_DropDownList',selection)
+>>>>>>> c9245cc0843265ac5b1cdf9d4b332045d47d7595
